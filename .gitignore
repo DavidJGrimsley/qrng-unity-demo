@@ -1,0 +1,53 @@
+# Unity
+# Generated files
+Library/
+Temp/
+Obj/
+*.pidb
+*.pdb
+*.meta
+*.csproj
+*.user
+*.suo
+*.userprefs
+*.pidb.meta
+*.pdb.meta
+*.csproj.meta
+*.user.meta
+*.suo.meta
+*.userprefs.meta
+# Visual Studio
+.vs/
+*.vscode
+# Build folders
+Builds/
+Logs/
+# OS generated files
+.DS_Store
+Thumbs.db
+# Editor
+Editor/
+# Packages
+Packages/
+# Project Settings
+ProjectSettings/
+# User Settings
+UserSettings/
+# Asset files
+Assets/Screenshots/
+Assets/Editor/
+# Visual Studio 2015+ cache
+.vscode/
+# Other common Unity ignore patterns
+*.log
+*.log.*
+*.tmp
+*.bak
+*.swp
+*.swn
+*~
+# Specific to this project
+Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj
+QuantumApi.Unity.csproj
+*.slnx

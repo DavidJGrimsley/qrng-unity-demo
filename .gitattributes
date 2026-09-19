@@ -1,0 +1,62 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Explicitly declare text files (these will be normalized)
+*.cs text
+*.js text
+*.json text
+*.xml text
+*.txt text
+*.md text
+*.yaml text
+*.yml text
+*.config text
+*.props text
+*.targets text
+*.sln text
+*.csproj text
+*.slnx text
+
+# Binary files (these will not be normalized)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tga binary
+*.asset binary
+*.prefab binary
+*.mat binary
+*.anim binary
+*.controller binary
+*.overrideController binary
+*.mask binary
+*.guiskin binary
+*.fontsettings binary
+*.renderTexture binary
+*.movie binary
+*.mp4 binary
+*.avi binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.ttf binary
+*.otf binary
+*.fbx binary
+*.dae binary
+*.blend binary
+*.psd binary
+*.ai binary
+*.eps binary
+*.svg binary
+
+# Unity-specific files
+Assets/**/Editor/* text
+Assets/**/Scripts/* text
+Assets/**/Shaders/* text
+Assets/**/Materials/* text
+Assets/**/Textures/* text
+
+# Ensure line endings are consistent for all text files
+* eol=lf
+
