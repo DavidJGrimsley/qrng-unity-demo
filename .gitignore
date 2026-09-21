@@ -30,8 +30,8 @@ Editor/
 # Packages
 Packages/
 # Project Settings
-ProjectSettings/*
-!ProjectSettings/ProjectVersion.txt
+# ProjectSettings/*
+# !ProjectSettings/ProjectVersion.txt
 # User Settings
 UserSettings/
 # Asset files
