@@ -1,53 +1,53 @@
-# Unity
-# Generated files
+# Unity generated folders
 Library/
 Temp/
 Obj/
-*.pidb
-*.pdb
-*.meta
-*.csproj
-*.user
-*.suo
-*.userprefs
-*.pidb.meta
-*.pdb.meta
-*.csproj.meta
-*.user.meta
-*.suo.meta
-*.userprefs.meta
-# Visual Studio
-.vs/
-*.vscode
+UserSettings/
+
 # Build folders
 Builds/
 Logs/
+
+# Visual Studio
+.vs/
+.vscode/
+
 # OS generated files
 .DS_Store
 Thumbs.db
-# Editor
-Editor/
-# Packages
-Packages/
-# Project Settings
-# ProjectSettings/*
-# !ProjectSettings/ProjectVersion.txt
-# User Settings
-UserSettings/
-# Asset files
-Assets/Screenshots/
-Assets/Editor/
-# Visual Studio 2015+ cache
-.vscode/
-# Other common Unity ignore patterns
-*.log
-*.log.*
+
+# Unity project files to ignore
+*.pidb
+*.pdb
+*.user
+*.suo
+*.userprefs
 *.tmp
 *.bak
 *.swp
 *.swn
 *~
-# Specific to this project
+
+# DO NOT ignore .meta files (Unity needs them)
+# DO NOT ignore .dll files globally
+
+# Allow Plugins DLLs
+!Assets/Plugins/*.dll
+
+# Allow QuantumApi code
+!Assets/QuantumApi/**
+
+# Allow Unity package lock file
+!Packages/packages-lock.json
+
+# Allow Unity version file
+!ProjectSettings/ProjectVersion.txt
+
+# Ignore screenshots and editor-only assets
+Assets/Screenshots/
+Assets/Editor/
+
+# Ignore specific project files
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 QuantumApi.Unity.csproj
