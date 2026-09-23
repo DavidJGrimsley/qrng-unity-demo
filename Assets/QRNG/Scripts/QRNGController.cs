@@ -14,11 +14,6 @@ namespace QRNG
         const float HardwarePollIntervalSeconds = 15f;
         const float HardwareTimeoutSeconds = 900f;
 
-        [Header("Quantum API")]
-        [SerializeField] bool backendProxyMode = false;
-        [SerializeField] string apiKey = "";
-        [SerializeField] int timeoutSeconds = 20;
-
         [Header("IBM Hardware Character Selection")]
         [SerializeField] string hardwareBackendName = "ibm_fez";
         [SerializeField] string hardwareProfileName = "Unreal Engine Demos";
@@ -35,8 +30,7 @@ namespace QRNG
         string activeHardwareJobId = "";
         bool applicationQuitting;
         CancellationTokenSource hardwareCancellation;
-
-        public bool BackendProxyMode => backendProxyMode;
+        QuantumApiClient activeHardwareClient;
 
         void Awake()
         {
@@ -166,22 +160,23 @@ namespace QRNG
             _ = RunHardwareCharacterAsync();
         }
 
-        QuantumApiClient CreateClient()
+        static QuantumApiClient GetClient()
         {
-            return new QuantumApiClient(new QuantumApiClientOptions
-            {
-                BackendProxyMode = backendProxyMode,
-                ApiKey = backendProxyMode ? "" : apiKey?.Trim(),
-                DefaultAuthMode = QuantumApiAuthMode.Auto,
-                TimeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : 20,
-            });
+            return QuantumApiManager.Instance?.Client;
         }
 
         bool ValidateClientConfiguration(QrngArcadeCard card)
         {
-            if (!backendProxyMode && string.IsNullOrWhiteSpace(apiKey))
+            var manager = QuantumApiManager.Instance;
+            if (manager == null || manager.Client == null)
             {
-                card.ShowError("API key is missing on the scene object. Select QRNGController and paste it into the Inspector API Key field.");
+                card.ShowError("Quantum API Manager is unavailable. Add QuantumApiManager to the scene and enter Play Mode again.");
+                return false;
+            }
+
+            if (!manager.IsConfigured)
+            {
+                card.ShowError("Set API Key on the QuantumApiManager scene object in the Inspector, then enter Play Mode again.");
                 return false;
             }
 
@@ -200,7 +195,7 @@ namespace QRNG
 
             try
             {
-                var response = await CreateClient().RandomIntAsync(min, max).ConfigureAwait(true);
+                var response = await GetClient().RandomIntAsync(min, max).ConfigureAwait(true);
                 if (response.value < min || response.value > max)
                 {
                     throw new InvalidOperationException($"The QRNG returned {response.value}, outside the expected {min}-{max} range.");
@@ -235,7 +230,8 @@ namespace QRNG
 
             try
             {
-                var client = CreateClient();
+                var client = GetClient();
+                activeHardwareClient = client;
                 var submit = await client.SubmitRandomJobAsync(
                     new RandomJobSubmitRequest
                     {
@@ -333,7 +329,9 @@ namespace QRNG
             }
             catch (QuantumApiError error)
             {
-                characterCard.ShowError(FormatQuantumError(error));
+                characterCard.ShowError(error.StatusCode == 504 && string.IsNullOrWhiteSpace(activeHardwareJobId)
+                    ? "IBM submission timed out before a job ID was returned. It may still be running; check the IBM dashboard before selecting again."
+                    : FormatQuantumError(error));
             }
             catch (Exception error)
             {
@@ -364,7 +362,7 @@ namespace QRNG
 
             try
             {
-                await CreateClient().CancelJobAsync(
+                await (activeHardwareClient ?? GetClient()).CancelJobAsync(
                     jobId,
                     new QuantumApiRequestOptions { TimeoutSeconds = 15 }).ConfigureAwait(false);
             }
@@ -512,7 +510,7 @@ namespace QRNG
                 (!string.IsNullOrWhiteSpace(error.Message) &&
                  error.Message.IndexOf("requires an API key", StringComparison.OrdinalIgnoreCase) >= 0))
             {
-                return "API key is not available to the scene object. Select QRNGController and set API Key in the Inspector.";
+                return "Set API Key on the QuantumApiManager scene object in the Inspector, then enter Play Mode again.";
             }
 
             if (error.RetryAfter.HasValue)

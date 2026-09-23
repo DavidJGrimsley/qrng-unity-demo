@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "com.quantumapi.runtime": {
-      "version": "file:D:/SoftwareDev/APIs/quantum-api-i2Workspace/quantum-api-unity-plugin-trials/sdk/unity",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 1,
