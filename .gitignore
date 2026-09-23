@@ -51,4 +51,5 @@ Assets/Editor/
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 QuantumApi.Unity.csproj
+QRNG.PlayModeTests.csproj
 *.slnx
