@@ -329,7 +329,9 @@ namespace QRNG
             }
             catch (QuantumApiError error)
             {
-                characterCard.ShowError(FormatQuantumError(error));
+                characterCard.ShowError(error.StatusCode == 504 && string.IsNullOrWhiteSpace(activeHardwareJobId)
+                    ? "IBM submission timed out before a job ID was returned. It may still be running; check the IBM dashboard before selecting again."
+                    : FormatQuantumError(error));
             }
             catch (Exception error)
             {
