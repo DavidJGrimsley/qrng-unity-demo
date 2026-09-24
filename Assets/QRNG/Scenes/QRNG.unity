@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d5f46dc4fb61f47b40c33c92eebe07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QRNG.QRNGController
-  hardwareBackendName: ibm_fez
-  hardwareProfileName: Unreal Engine Demos
   coinCard:
     titleLabel: {fileID: 974659163}
     captionLabel: {fileID: 1796464641}
@@ -1781,7 +1779,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: QuantumApi.Unity::QuantumApi.Unity.QuantumApiManager
   backendProxyMode: 0
   apiKey:
+  backendProxyUrl:
   timeoutSeconds: 20
+  defaultIbmBackend: ibm_fez
+  defaultIbmProfile: Unreal Engine Demos
 --- !u!4 &331727793
 Transform:
   m_ObjectHideFlags: 0

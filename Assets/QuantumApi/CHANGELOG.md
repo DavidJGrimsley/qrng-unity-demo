@@ -1,5 +1,18 @@
 # Quantum API Unity package changelog
 
+## 1.1.0
+
+- Added manager-owned direct API key and backend proxy URL modes, with mode-specific Inspector fields.
+- Added manager defaults for IBM job backend and profile, with explicit request values taking priority.
+- Kept upstream credentials out of proxy requests; proxy mode requires a compatible `/v1` endpoint.
+
+## 1.0.0
+
+- Fixed the built-in hosted endpoint to use the canonical `/public-facing/api/quantum/v1` route.
+- Removed the nonfunctional backend-proxy toggle; protected requests now use the configured API key, and the package has no editable URL or proxy endpoint.
+- Restored `QuantumApiManager` after scene load when Unity disables both domain and scene reload.
+- Promoted the breaking URL/auth configuration changes to a major package version.
+
 ## 0.2.0
 
 - Added `QuantumApiManager` for one Inspector configuration and shared client across scenes.
