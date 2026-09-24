@@ -4,10 +4,9 @@ Package-style Unity runtime helper for the Quantum API mounted `/v1` contract.
 
 This package is aimed at gameplay/runtime use. It includes:
 
-- a fixed production endpoint in the client source
+- the hosted production endpoint for direct mode and a configurable backend proxy URL
 - a shared `QuantumApiManager` component for Inspector configuration
-- backend-proxy mode by default for shipped builds
-- optional direct `X-API-Key` mode for local/dev/demo use
+- direct `X-API-Key` authentication or credential-free calls to your backend proxy
 - coroutine and `Task` entry points built on `UnityWebRequest`
 - structured `QuantumApiError` parsing for normalized API failures
 
@@ -33,12 +32,12 @@ Unity Package Manager workflow:
 
 1. Add `sdk/unity/package.json` through Unity Package Manager's local-path flow, or copy the package into `Packages/com.quantumapi.runtime`.
 2. Add `QuantumApiManager` to one GameObject in your first scene.
-3. In the Inspector, select backend-proxy mode or enter your own API key for direct mode. Set the timeout if needed.
+3. Choose direct mode and enter an API key, or enable **Backend Proxy Mode** and enter your proxy URL. Set the timeout and optional IBM defaults if needed.
 4. Other scripts use `QuantumApiManager.Instance.Client`. The manager survives scene changes and removes duplicate instances.
 
-The endpoint is fixed to `https://davidjgrimsley.com/api/public/quantum/v1` in `QuantumApiClient.cs`. There is no Inspector setting or runtime option to change it; changing it requires editing the plugin source.
+Direct mode uses `https://davidjgrimsley.com/public-facing/api/quantum/v1` and sends the manager's API key on protected requests. Proxy mode sends requests to your proxy URL, normalized to end in `/v1`, without sending an API key or bearer token. The proxy must implement the compatible API and hold the upstream credential server-side. The Inspector shows only the connection field for the selected mode.
 
-While in Play Mode, use the manager component's **Check Health** or **Request Random (0-1)** context-menu action to try the connection without writing code. Health also runs once at startup. Results and errors appear in Unity's Console. Leave the API key empty in scenes and enter it locally; a key saved into a scene is included in a build and can be read by others.
+While in Play Mode, use the manager component's **Check Health** or **Request Random (0-1)** context-menu action to try the connection without writing code. Health also runs once at startup. Results and errors appear in Unity's Console. Leave the API key empty in committed scenes and enter it locally; a key serialized into a scene or distributed build can be read by others.
 
 ## Layout
 
@@ -87,7 +86,6 @@ Direct-key QRNG smoke test:
 ```csharp
 var client = new QuantumApiClient(new QuantumApiClientOptions
 {
-    BackendProxyMode = false,
     ApiKey = "YOUR_API_KEY",
 });
 
@@ -146,34 +144,18 @@ var response = await _client.TransformTextWithFallbackAsync(
 );
 ```
 
-## Auth Modes
+## Authentication
 
 Default behavior:
 
 - `health` -> public
-- all other currently implemented Unity helper routes, including `random` -> no auth in backend-proxy mode
-- protected routes in direct mode -> `X-API-Key`
+- protected routes -> `X-API-Key`
 
-If your own backend proxy expects bearer auth, pass a default bearer token and set `DefaultAuthMode = QuantumApiAuthMode.Bearer`, or override auth per request.
+Direct mode requires an API key for protected routes. Proxy mode requires a valid HTTP or HTTPS URL and sends no `X-API-Key` or `Authorization` header, including when request options provide one. Keep upstream credentials on the proxy server for a distributed game.
 
-## IBM Profiles (Per-User IBM Credentials)
+## IBM runtime jobs
 
-How a normal hosted user gets credentials:
-
-1. Open `https://davidjgrimsley.com/public-facing/api/quantum` and sign in with an Identerest account.
-2. In the `Api Keys` panel, create a Quantum API key and copy the raw key immediately (it is shown once).
-3. In the `IBM Credentials` panel, create an IBM profile (`profile_name`, IBM API token, IBM instance/CRN, channel), then click verify.
-4. Optionally mark one profile as default on that same public page.
-
-This Unity helper currently wraps gameplay endpoints only, so profile lifecycle calls are expected to run through your backend.
-
-Backend responsibilities:
-
-- call `/v1/ibm/profiles*` using `Authorization: Bearer <jwt_from_identerest_sign_in>`.
-- return profile status/list data to the Unity UI.
-- submit IBM jobs with `ibm_profile` set to the selected profile name (or omit it to use the default profile).
-
-If you need direct profile calls in Unity before dedicated helper methods are added, issue custom `UnityWebRequest` calls to `/v1/ibm/profiles*` with `Authorization: Bearer <token>`.
+Set optional default backend and profile names on `QuantumApiManager`. Blank IBM job request fields use these defaults; explicit values take priority. The Unity client does not administer IBM credentials.
 
 ## Publishing Direction
 
@@ -189,7 +171,7 @@ The Unreal plugin path in `sdk/unreal/` is still Unreal-specific. Unity should n
 For a beginner-friendly hosted smoke test:
 
 1. Add this package to a scratch Unity project by local path.
-2. Add `QuantumApiManager` to one GameObject and enter your own API key in direct mode.
+2. Add `QuantumApiManager` to one GameObject and enter your own API key.
 3. Enter Play Mode and confirm the Console logs a health response.
 4. Use the manager's **Request Random (0-1)** context-menu action; confirm the result and source are logged.
 5. Build a Windows standalone development player and repeat at least health plus one protected call.

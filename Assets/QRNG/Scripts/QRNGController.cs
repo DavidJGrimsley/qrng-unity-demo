@@ -14,10 +14,6 @@ namespace QRNG
         const float HardwarePollIntervalSeconds = 15f;
         const float HardwareTimeoutSeconds = 900f;
 
-        [Header("IBM Hardware Character Selection")]
-        [SerializeField] string hardwareBackendName = "ibm_fez";
-        [SerializeField] string hardwareProfileName = "Unreal Engine Demos";
-
         [Header("Cards")]
         [SerializeField] QrngArcadeCard coinCard = new QrngArcadeCard();
         [SerializeField] QrngArcadeCard monsterCard = new QrngArcadeCard();
@@ -226,7 +222,7 @@ namespace QRNG
 
             characterCard.SetBusy(
                 "Submitting IBM job...",
-                $"Sending a 2-bit random selection job to {hardwareBackendName}. This may take several minutes.");
+                $"Sending a 2-bit random selection job to {QuantumApiManager.Instance.DefaultIbmBackend}. This may take several minutes.");
 
             try
             {
@@ -238,8 +234,6 @@ namespace QRNG
                         min = 0,
                         max = 3,
                         provider = "ibm",
-                        backend_name = hardwareBackendName,
-                        ibm_profile = hardwareProfileName,
                     },
                     new QuantumApiRequestOptions { TimeoutSeconds = 45 }).ConfigureAwait(true);
 
@@ -391,7 +385,7 @@ namespace QRNG
                 ArcadeIconKind.Chest);
             characterCard.Reset(
                 "Random Character",
-                $"IBM hardware job on {hardwareBackendName}. Two Hadamard-measured bits choose one of four Street Fighter characters and may take several minutes.",
+                $"IBM hardware job on {QuantumApiManager.Instance?.DefaultIbmBackend}. Two Hadamard-measured bits choose one of four Street Fighter characters and may take several minutes.",
                 "Select",
                 ArcadeIconKind.Character);
         }
