@@ -7,7 +7,7 @@ Open `Assets/QRNG/Scenes/QRNG.unity` in Unity 6000.6.1f1. Select the `QuantumApi
 
 Direct mode uses the hosted API URL. Proxy mode uses the configured URL with `/v1` appended when needed. Do not commit a scene after entering an API key; Unity serializes Inspector fields into scene files, and a distributed build does not keep them secret.
 
-The plugin source is maintained in `sdk/unity` of the Quantum API repository and copied into `Assets/QuantumApi` here so this project opens without a machine-specific package path.
+The plugin is [Quantum API Unity package v1.1.0](https://github.com/DavidJGrimsley/quantum-api/releases/tag/quantumapi-unity-v1.1.0), vendored in `Assets/QuantumApi` so this project opens without a machine-specific package path.
 ## C# vs Visual Scripting
 The plugin currently only supports C# scripts but I'm thinking of making it work with visual scripting.
 ## Simulator vs Hardware
